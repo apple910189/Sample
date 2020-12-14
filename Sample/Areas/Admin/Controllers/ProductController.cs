@@ -164,7 +164,7 @@ namespace Sample.Areas.Admin.Controllers
             var imagePath = Path.Combine(webRootPath, objFromDb.ImageUrl.TrimStart('\\'));
             if (System.IO.File.Exists(imagePath))
             {
-                System.IO.File.Delete(imagePath);
+                System.IO.File.Delete(imagePath);//
             }
 
             //Delete the obj
