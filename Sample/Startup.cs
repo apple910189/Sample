@@ -14,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Sample.DataAccess.Data;
 using Sample.DataAccess.Data.Repository.IRepository;
 using Sample.DataAccess.Data.Repository;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Sample.Utility;
 
 namespace Sample
 {
@@ -32,11 +34,29 @@ namespace Sample
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailOptions>(Configuration);
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = "674090119969875";
+                options.AppSecret = "128257f81183ab2386cca00b8141e46b";
+            });
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = "1028786513434-s2luoi1bca5k82sk2f7j35nk7m1f7ve4.apps.googleusercontent.com";
+                options.ClientSecret = "HYaMc7LCnX-KmItlYuEi921F";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

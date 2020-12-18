@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sample.DataAccess.Data.Repository.IRepository;
 using Sample.Models;
@@ -11,6 +12,7 @@ using Sample.Utility;
 namespace Sample.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
